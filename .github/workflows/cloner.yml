@@ -1,0 +1,65 @@
+name: Repo Cloner
+
+on:
+  workflow_dispatch:
+    inputs:
+        SL:
+          description: "Source Repo Link:"
+          required: true
+        
+        SB:
+          description: "Source Branch:"
+        
+        TL:
+          description: "Target Repo Link:"
+          required: true
+        
+        TB:
+          description: "Target Branch:"
+          required: true
+   
+env:
+  GIT_USERNAME: "Sushrut1101"
+  GIT_EMAIL: "guptasushrut@gmail.com"
+  
+  SOURCE: ${{ github.event.inputs.SL }}
+  SOURCE_BRANCH: ${{ github.event.inputs.SB }}
+  TARGET: ${{ github.event.inputs.TL }}
+  TARGET_BRANCH: ${{ github.event.inputs.TB }}
+  
+  TOKEN: ${{ secrets.GH_TOKEN }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Configure git and Store git Credentials
+        run: |
+          git config --global user.name $GIT_USERNAME
+          git config --global user.email $GIT_EMAIL
+          git config --global credential.helper store
+          echo "https://${GIT_USERNAME}:${TOKEN}@github.com" > ~/.git-credentials
+      
+      - name: Cloning Repo
+        run: |
+          git clone --single-branch $SOURCE -b $SOURCE_BRANCH repo
+      
+      - name: Setting up Branches
+        working-directory: repo
+        run: |
+          git branch -m $TARGET_BRANCH
+      
+      - name: Setting up the Origin
+        working-directory: repo
+        run: |
+          git remote remove origin
+          git remote add origin $TARGET
+      
+      - name: Pushing
+        working-directory: repo
+        run: |
+          git push -u origin $TARGET_BRANCH
