@@ -30,7 +30,7 @@ env:
   TOKEN: ${{ secrets.GH_TOKEN }}
 
 jobs:
-  deploy:
+  clone:
     runs-on: ubuntu-latest
 
     steps:
