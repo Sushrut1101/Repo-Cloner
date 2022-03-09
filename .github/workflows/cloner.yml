@@ -69,4 +69,4 @@ jobs:
       - name: Pushing
         working-directory: repo
         run: |
-          bash push.sh
+          curl -sL https://raw.githubusercontent.com/Sushrut1101/Repo-Cloner/master/push.sh | bash
