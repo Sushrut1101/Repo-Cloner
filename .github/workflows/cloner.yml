@@ -17,6 +17,11 @@ on:
         TB:
           description: "Target Branch:"
           required: true
+        
+        C_LOOP:
+          description: "Commit Loops (for large repos)"
+          required: false
+          default: "None"
    
 env:
   GIT_USERNAME: "Sushrut1101"
@@ -26,6 +31,8 @@ env:
   SOURCE_BRANCH: ${{ github.event.inputs.SB }}
   TARGET: ${{ github.event.inputs.TL }}
   TARGET_BRANCH: ${{ github.event.inputs.TB }}
+
+  COMMIT_LOOPS: ${{ github.event.inputs.C_LOOP }}
   
   TOKEN: ${{ secrets.GH_TOKEN }}
 
@@ -62,4 +69,4 @@ jobs:
       - name: Pushing
         working-directory: repo
         run: |
-          git push -u origin $TARGET_BRANCH
+          bash push.sh
